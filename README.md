@@ -4,4 +4,4 @@ run
 ```bash
 npm install --save
 ```
-node server and the react app 'chat'
+in the root directory node server and the react app in the 'chat' directory
