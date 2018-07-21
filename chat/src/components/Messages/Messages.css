@@ -1,0 +1,7 @@
+#messages { list-style-type: none; margin: 0; padding: 0; }
+#messages li { padding: 5px 10px; }
+#messages li .name {text-transform:capitalize;color:#f44336; }
+#messages li .msg {color: #697d8b;}
+#messages li:nth-child(odd) { background: #eee; }
+#messages li:nth-child(odd) .name {color:009688;}
+#messages li:nth-child(odd) .msg {color:#00bcd4;} 
