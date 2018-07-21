@@ -1,0 +1,16 @@
+{
+  "name": "react-socket-io-example",
+  "version": "1.0.0",
+  "description": "Simple Node, React & socket.io chat app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "oluyoung",
+  "license": "ISC",
+  "dependencies": {
+    "express": "*",
+    "package.json": "^2.0.1",
+    "socket.io": "*"
+  }
+}
