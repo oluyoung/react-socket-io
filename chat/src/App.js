@@ -48,8 +48,13 @@ class App extends Component {
       this.socket.emit('chat message', new_message);
 
       // do something when this event is performed
-      /* This is the problem area
 
+      /* THIS IS THE PROBLEM AREA=================
+      even though I emit just above i need to run this event handler
+      to check when an event concerning this namespace has happened
+      but it duplicates the message.
+      */
+      /*
       this.socket.on('chat message', (msg) => {
         console.log(msg);
         // reset the input value
