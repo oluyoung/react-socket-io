@@ -22,13 +22,15 @@ class App extends Component {
     // this handles the username registration
     this.username = React.createRef();
 
-    // Bind functions to the class
+    // Bind functions to this class
     this.setUser = this.setUser.bind(this);
     this.setMessage = this.setMessage.bind(this);
     this.sendChat = this.sendChat.bind(this);
 
     // This handles any new event on the socket
     // Any new event put up
+    // Included in the constructor because the constructor method is only run once
+    // in the react lifecycle
     this.socket.on('chat message', (msg) => {
       console.log(msg);
       // reset the input value
@@ -42,24 +44,36 @@ class App extends Component {
     });
   }
 
+  /**
+  Function to store the user within the state
+  **/
   setUser(event){
     event.preventDefault();
+    // this gets the input value passed as a reference
     let username = this.username.current.value;
-    console.log(this.username.current.value);
+    // Only set the user state if input is passed
     if(username !== '') this.setState({user: username});
   }
 
+  /**
+  Function to store the message within the state
+  **/
   setMessage(event){
+    // stores the new message's state
     this.setState({message: event.target.value});
   }
   
+  /**
+  Function to handle the Message Sending to the socket
+  **/
   sendChat(event){
     event.preventDefault();
+
     let input_message = this.state.message;
     
     if(input_message === '' ) console.log('Can\'t submit nothing');
     else {
-      // generate timestamp for order
+      // generate timestamp for chat message
       let timestamp = (new Date()).getTime();
       
       // generate key to use as id
