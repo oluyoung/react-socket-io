@@ -1,27 +1,52 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
-import Register from './components/Register/Register.js';
-import Messages from './components/Messages/Messages.js';
-import Form from './components/Form/Form.js';
+import Register from '../components/Register/Register.js';
+import Messages from '../components/Messages/Messages.js';
+import Form from '../components/Form/Form.js';
 import './App.css';
 
 class App extends Component {
   constructor(props){
     super(props);
+
+    // Initializes the socket connection to the Node server
     this.socket = io('http://localhost:3000');
+
+    // Initialize states
     this.state = {
-      message: '',
-      user: 'Anon',
-      messages: [] 
+      message: '', // handles any new messageeese
+      user: 'Anon', // Default username
+      messages: [] // Stores all the messages of the user
     };
+
+    // this handles the username registration
+    this.username = React.createRef();
+
+    // Bind functions to the class
     this.setUser = this.setUser.bind(this);
     this.setMessage = this.setMessage.bind(this);
     this.sendChat = this.sendChat.bind(this);
+
+    // This handles any new event on the socket
+    // Any new event put up
+    this.socket.on('chat message', (msg) => {
+      console.log(msg);
+      // reset the input value
+      this.setState({message: ''});
+
+      // push to this.state's message array
+      this.state.messages.push(msg);
+      // update the messages state array
+      this.setState({messages: this.state.messages});
+      console.log(this.state.messages);
+    });
   }
 
   setUser(event){
     event.preventDefault();
-    this.setState({user: event.target.value});
+    let username = this.username.current.value;
+    console.log(this.username.current.value);
+    if(username !== '') this.setState({user: username});
   }
 
   setMessage(event){
@@ -34,45 +59,24 @@ class App extends Component {
     
     if(input_message === '' ) console.log('Can\'t submit nothing');
     else {
-      console.log(this.state.user);
-
       // generate timestamp for order
       let timestamp = (new Date()).getTime();
+      
       // generate key to use as id
       let key = this.state.user + timestamp;
+      
       // get new message with user
       let new_message = {key:key ,user: this.state.user, message: input_message, time: timestamp};
-      // console.log(new_message);
 
       // send message with title 'chat message' to socket
       this.socket.emit('chat message', new_message);
-
-      // do something when this event is performed
-
-      /* THIS IS THE PROBLEM AREA=================
-      even though I emit just above i need to run this event handler
-      to check when an event concerning this namespace has happened
-      but it duplicates the message.
-      */
-      /*
-      this.socket.on('chat message', (msg) => {
-        console.log(msg);
-        // reset the input value
-        this.setState({message: ''});
-
-        // push to this.state's message array
-        this.state.messages.push(new_message);
-        // update the messages state array
-        this.setState({messages: this.state.messages});
-        console.log(this.state.messages);
-      });*/
     }
   }
 
   render() {
     return (
       <div className="App">
-        <Register setuser={this.setUser} user={this.state.user}/>
+        <Register setuser={this.setUser} inputref={this.username}/>
         <Messages messages={this.state.messages} />
         <Form send={this.sendChat} getmsg={this.setMessage} value={this.state.message}/>
       </div>
